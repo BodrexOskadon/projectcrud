@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: ats
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+    ports:
+      - "5432:5432"
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    volumes:
+      - miniodata:/data
+    networks:
+      - app-network
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  api:
+    build: ./api
+    container_name: api
+    networks:
+      - app-network
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - minio
+
+  backend:
+    build: ./backend
+    container_name: backend
+    networks:
+      - app-network
+    ports:
+      - "5000:5000"
+    depends_on:
+      - api
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    networks:
+      - app-network
+    ports:
+      - "3000:80"
+
+volumes:
+  pgdata:
+  miniodata:
+
+networks:
+  app-network:
