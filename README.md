@@ -11,8 +11,9 @@ PostgreSQL + MinIO + Docker Compose
 // login ke server (jika menggunakan SSH)
 ssh root@IP_SERVER
 
-// masuk ke folder project
-cd ~/crud-microservice
+// buat dan masuk ke folder/directory project
+mkdir crud-microservice
+cd crud-microservice
 
 // melihat isi folder project
 ls
@@ -115,6 +116,17 @@ docker exec -it postgres psql -U admin -d ats
 // melihat semua tabel
 \dt
 
+// MEMBUAT TABEL USERS
+ //====================================================
+
+ CREATE TABLE users (
+     id SERIAL PRIMARY KEY,
+     name VARCHAR(100) NOT NULL,
+     email VARCHAR(100) NOT NULL,
+     photo_url TEXT,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+ );
+
 
 //====================================================
 // 10. MELIHAT DATA USER
@@ -131,7 +143,8 @@ SELECT * FROM users;
 // menghapus user berdasarkan id
 DELETE FROM users WHERE id=1;
 
-
+// menghapus semua user
+DELETE FROM users ;
 //====================================================
 // 12. KELUAR DARI DATABASE
 //====================================================
@@ -144,7 +157,7 @@ DELETE FROM users WHERE id=1;
 //====================================================
 
 // frontend web
-http://IP_SERVER
+http://IP_SERVER:3000
 
 // REST API
 http://IP_SERVER:8080
@@ -166,7 +179,7 @@ password : admin123
 //====================================================
 
 // Create
-Menambahkan user baru dengan nama, email, dan foto profil.
+Menambahkan user baru dengan nama, email, dan foto .
 
 // Read
 Menampilkan daftar user dari database.
@@ -175,7 +188,7 @@ Menampilkan daftar user dari database.
 Mengubah nama, email, atau foto user.
 
 // Delete
-Menghapus data user dari database dan file dari MinIO.
+Menghapus data user dari database dan file dari MinIO atau Postgres.
 
 
 //====================================================
@@ -222,7 +235,7 @@ PostgreSQL menyimpan:
 - URL foto
 
 MinIO menyimpan:
-- file foto profil
+- file foto 
 
 
 //====================================================
